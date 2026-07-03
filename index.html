@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Intake">
+<meta name="theme-color" content="#0d9488">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-512.png">
+<title>The Intake 🩺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&family=Noto+Serif+JP:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appearance:none}
+:root{--t:#0d9488;--t2:#14b8a6;--t3:#99f6e4;--v:#7c3aed;--v2:#9f67f5;--g:#d97706;--g2:#fbbf24;--bg:#09110f;--bg2:#0d1a17;--bg3:#122420;--bg4:#183430;--tx:#e0faf6;--tx2:#8ecec7;--tx3:#4d8f88;--bd:rgba(13,148,136,.2);--bd2:rgba(13,148,136,.08);--card:#0d1a17;--hh:58px;}
+[data-theme="light"]{--bg:#f0fdfb;--bg2:#fff;--bg3:#ccfbf1;--bg4:#99f6e4;--tx:#0c2825;--tx2:#15635a;--tx3:#4d9990;--bd:rgba(13,148,136,.25);--bd2:rgba(13,148,136,.1);--card:#fff;}
+html,body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:16px;min-height:100vh}
+body{padding-bottom:2rem}
+.hdr{height:var(--hh);padding:0 1rem;display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--bd2);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
+.nav-wrap{position:sticky;top:var(--hh);z-index:150;background:var(--bg);border-bottom:1px solid var(--bd2);display:flex;overflow-x:auto;scrollbar-width:none;padding:.45rem .75rem;gap:6px}
+.nav-wrap::-webkit-scrollbar{display:none}
+.nbtn{flex-shrink:0;display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--bd);border-radius:100px;cursor:pointer;padding:6px 13px;color:var(--tx2);transition:all .2s;-webkit-tap-highlight-color:transparent;white-space:nowrap;font-size:13px;font-weight:600}
+.nbtn.active{background:var(--t);border-color:var(--t);color:#fff}
+.sec{display:none;padding:1rem;animation:fi .2s ease}.sec.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.slbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem}
+.slbl::after{content:'';flex:1;height:1px;background:var(--bd)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:.9rem 1rem;margin-bottom:.65rem}
+.btn{width:100%;padding:.75rem 1rem;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.bt{background:var(--t);color:#fff}.bt:active{transform:scale(.98)}
+.bg{background:var(--bg3);color:var(--tx2);border:1px solid var(--bd)}.bg:active{background:var(--bg4)}
+.inp{width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem .9rem;color:var(--tx);font-size:15px;transition:border-color .2s;resize:none}
+.inp:focus{outline:none;border-color:var(--t2)}.inp::placeholder{color:var(--tx3)}
+.ilbl{font-size:12px;font-weight:600;color:var(--tx3);margin-bottom:.35rem;display:block}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--t);color:#fff;padding:.5rem 1.1rem;border-radius:100px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.chip{display:inline-block;padding:4px 11px;border-radius:100px;font-size:12px;font-weight:600;background:var(--bg3);color:var(--tx3);border:1px solid var(--bd);cursor:pointer;-webkit-tap-highlight-color:transparent;margin:.2rem .2rem .2rem 0;transition:all .2s}
+.chip.sel{background:rgba(13,148,136,.2);color:var(--t2);border-color:var(--t)}
+.note-card{background:var(--card);border:1px solid var(--bd);border-radius:14px;margin-bottom:.5rem;overflow:hidden}
+.note-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.note-body{display:none;padding:.75rem 1rem 1rem;border-top:1px solid var(--bd2)}
+.note-body.open{display:block}
+.soap-section{background:var(--bg3);border-radius:10px;padding:.65rem .75rem;margin-bottom:.5rem}
+.soap-lbl{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.25rem}
+.point-pill{display:inline-block;background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:var(--t2);border-radius:100px;padding:3px 10px;font-size:12px;font-weight:600;margin:.15rem}
+
+.neon-sign {
+  font-family: 'Zen Tokyo Zoo', 'Noto Serif JP', serif;
+  font-size: 18px;
+  color: #fff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #14b8a6,
+    0 0 40px #14b8a6,
+    0 0 80px #14b8a6,
+    0 0 90px #14b8a6;
+  line-height: 1.5;
+  letter-spacing: .04em;
+  animation: flicker 4s infinite;
+}
+@keyframes flicker {
+  0%,19%,21%,23%,25%,54%,56%,100%{
+    text-shadow:0 0 5px #fff,0 0 10px #fff,0 0 20px #14b8a6,0 0 40px #14b8a6,0 0 80px #14b8a6;
+    opacity:1;
+  }
+  20%,24%,55%{
+    text-shadow:none;
+    opacity:.8;
+  }
+}
+.neon-border {
+  border: 2px solid #14b8a6;
+  box-shadow: 0 0 8px #14b8a6, inset 0 0 8px rgba(20,184,166,.1);
+  border-radius: 14px;
+  padding: 1rem;
+  background: rgba(0,0,0,.4);
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<header class="hdr">
+  <div>
+    <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--tx)">The Intake 🩺</div>
+    <div style="font-size:9px;color:var(--t2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:1px">Clinical Journal · VUIM DAcHM</div>
+  </div>
+  <button style="background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--tx2)" id="theme-btn">☀️</button>
+</header>
+<nav class="nav-wrap">
+  <button class="nbtn active" onclick="sw('soap',this)">📋 SOAP Note</button>
+  <button class="nbtn" onclick="sw('rx',this)">📌 Point Rx</button>
+  <button class="nbtn" onclick="sw('pattern',this)">🔍 Pattern Dx</button>
+  <button class="nbtn" onclick="sw('formulas',this)">🌿 Formula Rx</button>
+  <button class="nbtn" onclick="sw('notes',this)">📚 All Notes</button>
+  <button class="nbtn" onclick="sw('references',this)">📖 Reference</button>
+  <button class="nbtn" onclick="sw('why',this)">💡 Why</button>
+</nav>
+
+<!-- SOAP NOTE -->
+<div class="sec active" id="sec-soap">
+  <div class="slbl">New SOAP note</div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.65rem">
+      <div><label class="ilbl">Date</label><input type="date" class="inp" id="soap-date"></div>
+      <div><label class="ilbl">Session #</label><input type="text" class="inp" id="soap-session" placeholder="e.g. Self Obs. 3"></div>
+    </div>
+    <label class="ilbl">Chief complaint</label>
+    <input type="text" class="inp" id="soap-cc" placeholder="What brings you in today?" style="margin-bottom:.65rem">
+
+    <div class="soap-section">
+      <div class="soap-lbl">S — Subjective</div>
+      <textarea class="inp" id="soap-s" placeholder="Patient's own words. How do they describe the problem? Onset, duration, quality, modifying factors. Any relevant history." style="min-height:90px;margin-top:.35rem"></textarea>
+    </div>
+    <div class="soap-section">
+      <div class="soap-lbl">O — Objective</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.4rem">
+        <div><label class="ilbl">Tongue body</label><input type="text" class="inp" id="soap-tongue-body" placeholder="pale, red, purple…"></div>
+        <div><label class="ilbl">Tongue coat</label><input type="text" class="inp" id="soap-tongue-coat" placeholder="thin white, thick yellow…"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.4rem">
+        <div><label class="ilbl">Pulse overall</label><input type="text" class="inp" id="soap-pulse" placeholder="wiry, slippery, thin…"></div>
+        <div><label class="ilbl">Pulse position</label><input type="text" class="inp" id="soap-pulse-pos" placeholder="weak KD, full LV…"></div>
+      </div>
+      <label class="ilbl">Other findings</label>
+      <textarea class="inp" id="soap-o" placeholder="Complexion, voice, affect, posture, palpation findings, temperature, pain scale…" style="min-height:70px"></textarea>
+    </div>
+    <div class="soap-section">
+      <div class="soap-lbl">A — Assessment</div>
+      <label class="ilbl" style="margin-top:.35rem">TCM Pattern(s)</label>
+      <div style="display:flex;flex-wrap:wrap;margin:.3rem 0 .5rem" id="soap-pattern-chips"></div>
+      <input type="text" class="inp" id="soap-pattern-custom" placeholder="Or type pattern…" style="margin-bottom:.4rem">
+      <label class="ilbl">Treatment principle</label>
+      <input type="text" class="inp" id="soap-tx-principle" placeholder="e.g. Soothe LV, tonify KD Yin, move Blood…">
+    </div>
+    <div class="soap-section">
+      <div class="soap-lbl">P — Plan</div>
+      <textarea class="inp" id="soap-p" placeholder="Point prescription, moxa, herbal formula, dietary advice, lifestyle recommendations, follow-up timing…" style="min-height:90px;margin-top:.35rem"></textarea>
+    </div>
+    <label class="ilbl" style="margin-top:.5rem">Clinical reflection (student lens)</label>
+    <textarea class="inp" id="soap-reflect" placeholder="What did this case teach me? What would I do differently? How does this connect to class material?" style="min-height:70px;margin-bottom:.75rem"></textarea>
+    <button class="btn bt" onclick="saveSOAP()">Save SOAP note</button>
+  </div>
+</div>
+
+<!-- POINT RX BUILDER -->
+<div class="sec" id="sec-rx">
+  <div class="slbl">Point prescription builder</div>
+  <div class="card">
+    <label class="ilbl">Condition / pattern</label>
+    <input type="text" class="inp" id="rx-condition" placeholder="e.g. Liver Qi stagnation with SP deficiency" style="margin-bottom:.65rem">
+    <label class="ilbl">Build your prescription — tap to add</label>
+    <div class="slbl" style="margin-top:.5rem;font-size:10px">Local points</div>
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:.5rem" id="local-chips"></div>
+    <div class="slbl" style="font-size:10px">Distal / systemic</div>
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:.5rem" id="distal-chips"></div>
+    <div class="slbl" style="font-size:10px">Your prescription</div>
+    <div style="min-height:40px;background:var(--bg3);border-radius:10px;padding:.5rem .65rem;margin-bottom:.65rem" id="rx-selected">
+      <div style="font-size:13px;color:var(--tx3)">Tap points above to add…</div>
+    </div>
+    <label class="ilbl">Add any point manually</label>
+    <div style="display:flex;gap:.5rem;margin-bottom:.65rem">
+      <input type="text" class="inp" id="rx-manual" placeholder="e.g. SP-10, GB-34…" style="flex:1">
+      <button class="btn bt" style="width:auto;padding:.65rem 1rem;font-size:14px" onclick="addManualPoint()">Add</button>
+    </div>
+    <label class="ilbl">Needling notes</label>
+    <textarea class="inp" id="rx-notes" placeholder="Needle direction, depth, technique, moxa, tuina additions…" style="min-height:60px;margin-bottom:.65rem"></textarea>
+    <button class="btn bt" onclick="saveRx()">Save prescription</button>
+  </div>
+  <div class="slbl" style="margin-top:.5rem">Saved prescriptions</div>
+  <div id="rx-list"><div class="card" style="text-align:center;color:var(--tx3);font-size:14px">None yet.</div></div>
+</div>
+
+<!-- PATTERN DX -->
+<div class="sec" id="sec-pattern">
+  <div class="slbl">Pattern diagnosis builder</div>
+  <div class="card">
+    <div style="font-size:14px;color:var(--tx2);line-height:1.6;margin-bottom:.75rem">Build a differential based on signs and symptoms. This is for study and self-observation — not clinical diagnosis.</div>
+    <label class="ilbl">Primary symptoms (select all that apply)</label>
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:.75rem" id="symptom-selector"></div>
+    <label class="ilbl">Tongue</label>
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:.75rem" id="tongue-chips"></div>
+    <label class="ilbl">Pulse</label>
+    <div style="display:flex;flex-wrap:wrap;margin-bottom:.75rem" id="pulse-chips"></div>
+    <div id="pattern-result" style="display:none"></div>
+    <button class="btn bt" onclick="runPatternDx()">Run differential</button>
+  </div>
+</div>
+
+<!-- FORMULA RX -->
+<div class="sec" id="sec-formulas">
+  <div class="slbl">Formula prescription</div>
+  <div class="card">
+    <label class="ilbl">Pattern / indication</label>
+    <input type="text" class="inp" id="frx-pattern" placeholder="e.g. KD Yin deficiency with LV Yang rising" style="margin-bottom:.65rem">
+    <label class="ilbl">Base formula</label>
+    <select class="inp" id="frx-base" style="margin-bottom:.65rem">
+      <option value="">Select base formula…</option>
+      <option>Liu Wei Di Huang Wan (六味地黃丸) — KD Yin Deficiency</option>
+      <option>Zhi Bai Di Huang Wan (知柏地黃丸) — KD Yin Def + Fire</option>
+      <option>Er Zhi Wan (二至丸) — LV/KD Yin Deficiency</option>
+      <option>Xiao Yao San (逍遙散) — LV Qi Stagnation + SP Deficiency</option>
+      <option>Si Jun Zi Tang (四君子湯) — SP Qi Deficiency</option>
+      <option>Ba Zhen Tang (八珍湯) — Qi and Blood Deficiency</option>
+      <option>Suan Zao Ren Tang (酸棗仁湯) — HT Blood Def / Insomnia</option>
+      <option>Long Dan Xie Gan Tang (龍膽瀉肝湯) — LV Fire / Damp-Heat</option>
+      <option>Tian Wang Bu Xin Dan (天王補心丹) — HT/KD Yin Def</option>
+      <option>Gui Pi Tang (歸脾湯) — HT/SP Deficiency</option>
+    </select>
+    <label class="ilbl">Modifications (add / remove herbs)</label>
+    <textarea class="inp" id="frx-mods" placeholder="e.g. Add: Chai Hu 6g, Bai Shao 12g · Remove: Ze Xie (if dry)" style="min-height:60px;margin-bottom:.65rem"></textarea>
+    <label class="ilbl">Dosage & instructions</label>
+    <input type="text" class="inp" id="frx-dose" placeholder="e.g. 6g twice daily, 30 min before meals" style="margin-bottom:.65rem">
+    <label class="ilbl">Duration & follow-up</label>
+    <input type="text" class="inp" id="frx-duration" placeholder="e.g. 4 weeks, reassess tongue/pulse" style="margin-bottom:.65rem">
+    <label class="ilbl">Safety check</label>
+    <textarea class="inp" id="frx-safety" placeholder="Interactions, contraindications, pregnancy status, medications…" style="min-height:60px;margin-bottom:.75rem"></textarea>
+    <button class="btn bt" onclick="saveFormulaRx()">Save formula Rx</button>
+  </div>
+  <div class="slbl" style="margin-top:.5rem">Saved prescriptions</div>
+  <div id="frx-list"><div class="card" style="text-align:center;color:var(--tx3);font-size:14px">None yet.</div></div>
+</div>
+
+<!-- ALL NOTES -->
+<div class="sec" id="sec-notes">
+  <div class="slbl">All clinical notes</div>
+  <div id="all-notes"><div class="card" style="text-align:center;color:var(--tx3);font-size:14px">No notes yet. Start with a SOAP note.</div></div>
+</div>
+
+<!-- REFERENCE -->
+<div class="sec" id="sec-references">
+  <div class="slbl">Quick reference</div>
+  <div class="card">
+    <div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">8 Principles (八綱)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.75rem">
+      <div style="background:var(--bg3);border-radius:8px;padding:.5rem .65rem;font-size:13px;color:var(--tx2)">Yin 陰 / Yang 陽</div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.5rem .65rem;font-size:13px;color:var(--tx2)">Interior 裏 / Exterior 表</div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.5rem .65rem;font-size:13px;color:var(--tx2)">Cold 寒 / Heat 熱</div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.5rem .65rem;font-size:13px;color:var(--tx2)">Deficiency 虛 / Excess 實</div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">4 Examinations (四診)</div>
+    <div style="font-size:14px;color:var(--tx2);line-height:1.8;margin-bottom:.75rem">
+      望 Inspection · 聞 Listening/Smelling<br>問 Inquiry · 切 Palpation (pulse, abdomen)
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Common tongue-pattern correlations</div>
+    <div id="tongue-ref"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin:.75rem 0 .5rem">Common pulse-pattern correlations</div>
+    <div id="pulse-ref"></div>
+  </div>
+</div>
+
+<script>
+(function(){var s=localStorage.getItem('intake-theme');if(s)document.documentElement.setAttribute('data-theme',s);else document.documentElement.setAttribute('data-theme',window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');})();
+document.getElementById('theme-btn').addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('intake-theme',n);this.textContent=n==='dark'?'☀️':'🌙';});
+document.getElementById('theme-btn').textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function sw(id,btn){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));document.getElementById('sec-'+id).classList.add('active');if(btn)btn.classList.add('active');if(id==='notes')renderAllNotes();if(id==='references')renderRef();}
+
+const PATTERNS=['LV Qi Stagnation','LV Blood Deficiency','LV Yang Rising','LV Fire','LV Wind','KD Yin Deficiency','KD Yang Deficiency','KD Jing Deficiency','HT Qi Deficiency','HT Blood Deficiency','HT Fire','HT Shen Disturbance','SP Qi Deficiency','SP Yang Deficiency','SP Damp','Damp-Heat','LU Qi Deficiency','LU Yin Deficiency','Wei Qi Deficiency','Blood Stagnation','Phlegm-Damp','Phlegm-Fire'];
+const LOCAL_PTS=['LI-4','LI-11','LU-7','ST-36','ST-40','SP-6','SP-10','HT-7','PC-6','BL-23','BL-40','KD-3','KD-1','LV-3','LV-8','GB-20','GB-21','GB-34','GV-20','GV-14','CV-4','CV-6','CV-12','CV-17'];
+const DISTAL_PTS=['LI-4 (face/head)','LU-7 (Metal)','ST-36 (tonify Qi)','SP-6 (3 Yin)','HT-7 (Shen)','PC-6 (calm)','BL-40 (back)','KD-3 (source)','LV-3 (move Qi)','GB-34 (sinews)','GV-20 (lift Yang)','CV-17 (chest Qi)'];
+var rxPoints=[];
+var selPatternChips=new Set();
+
+function initSOAP(){
+  document.getElementById('soap-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('soap-pattern-chips').innerHTML=PATTERNS.map(p=>`<span class="chip" onclick="togChip('${p}',this,'soap')">${p}</span>`).join('');
+}
+function togChip(p,btn,ns){btn.classList.toggle('sel');if(ns==='soap'){if(selPatternChips.has(p))selPatternChips.delete(p);else selPatternChips.add(p);document.getElementById('soap-pattern-custom').value=Array.from(selPatternChips).join('; ');}}
+
+function saveSOAP(){
+  var cc=document.getElementById('soap-cc').value;if(!cc){toast('Add chief complaint');return;}
+  var notes=JSON.parse(localStorage.getItem('intake-notes')||'[]');
+  notes.unshift({type:'SOAP',date:document.getElementById('soap-date').value,session:document.getElementById('soap-session').value,cc,s:document.getElementById('soap-s').value,tongue_body:document.getElementById('soap-tongue-body').value,tongue_coat:document.getElementById('soap-tongue-coat').value,pulse:document.getElementById('soap-pulse').value,pulse_pos:document.getElementById('soap-pulse-pos').value,o:document.getElementById('soap-o').value,pattern:document.getElementById('soap-pattern-custom').value,tx_principle:document.getElementById('soap-tx-principle').value,p:document.getElementById('soap-p').value,reflect:document.getElementById('soap-reflect').value,ts:Date.now()});
+  localStorage.setItem('intake-notes',JSON.stringify(notes.slice(0,200)));
+  ['soap-cc','soap-session','soap-s','soap-tongue-body','soap-tongue-coat','soap-pulse','soap-pulse-pos','soap-o','soap-pattern-custom','soap-tx-principle','soap-p','soap-reflect'].forEach(id=>document.getElementById(id).value='');
+  selPatternChips.clear();document.querySelectorAll('#soap-pattern-chips .chip').forEach(c=>c.classList.remove('sel'));
+  toast('SOAP note saved 🩺');
+}
+
+function initRx(){
+  document.getElementById('local-chips').innerHTML=LOCAL_PTS.map(p=>`<span class="chip" onclick="addPoint('${p}',this)">${p}</span>`).join('');
+  document.getElementById('distal-chips').innerHTML=DISTAL_PTS.map(p=>`<span class="chip" onclick="addPoint('${p.split(' ')[0]}',this)">${p}</span>`).join('');
+  renderRxSelected();renderRxList();
+}
+function addPoint(p,btn){if(!rxPoints.includes(p)){rxPoints.push(p);btn.classList.add('sel');}else{rxPoints=rxPoints.filter(x=>x!==p);btn.classList.remove('sel');}renderRxSelected();}
+function addManualPoint(){var v=document.getElementById('rx-manual').value.trim();if(!v)return;v.split(',').map(s=>s.trim()).filter(Boolean).forEach(p=>{if(!rxPoints.includes(p))rxPoints.push(p);});document.getElementById('rx-manual').value='';renderRxSelected();}
+function renderRxSelected(){var el=document.getElementById('rx-selected');if(!rxPoints.length){el.innerHTML='<div style="font-size:13px;color:var(--tx3)">Tap points above to add…</div>';return;}el.innerHTML=rxPoints.map(p=>`<span class="point-pill" onclick="removePoint('${p}')">${p} ×</span>`).join('');}
+function removePoint(p){rxPoints=rxPoints.filter(x=>x!==p);document.querySelectorAll('.chip').forEach(c=>{if(c.textContent.startsWith(p))c.classList.remove('sel');});renderRxSelected();}
+function saveRx(){
+  if(!rxPoints.length){toast('Add at least one point');return;}
+  var cond=document.getElementById('rx-condition').value;
+  var rxs=JSON.parse(localStorage.getItem('intake-rx')||'[]');
+  rxs.unshift({condition:cond,points:[...rxPoints],notes:document.getElementById('rx-notes').value,date:new Date().toISOString().slice(0,10),ts:Date.now()});
+  localStorage.setItem('intake-rx',JSON.stringify(rxs.slice(0,100)));
+  rxPoints=[];document.getElementById('rx-condition').value='';document.getElementById('rx-notes').value='';
+  document.querySelectorAll('#local-chips .chip, #distal-chips .chip').forEach(c=>c.classList.remove('sel'));
+  renderRxSelected();renderRxList();toast('Prescription saved 📌');
+}
+function renderRxList(){
+  var rxs=JSON.parse(localStorage.getItem('intake-rx')||'[]');var el=document.getElementById('rx-list');
+  if(!rxs.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--tx3);font-size:14px">None yet.</div>';return;}
+  el.innerHTML=rxs.map((r,i)=>`<div class="note-card"><div class="note-hdr" onclick="togNote('rx',${i})"><div><div style="font-size:14px;font-weight:700;color:var(--tx)">${r.condition||'Point Rx'}</div><div style="font-size:11px;color:var(--tx3)">${r.date} · ${r.points.length} points</div></div><span style="color:var(--tx3);font-size:14px">›</span></div><div class="note-body" id="rxb${i}"><div style="display:flex;flex-wrap:wrap">${r.points.map(p=>`<span class="point-pill">${p}</span>`).join('')}</div>${r.notes?`<div style="font-size:13px;color:var(--tx2);margin-top:.5rem;line-height:1.6">${r.notes}</div>`:''}</div></div>`).join('');
+}
+
+function initPatternDx(){
+  const SYMS=['Fatigue','Irritability','Anxiety','Depression','Insomnia','Palpitations','Night sweats','Hot flashes','Cold limbs','Lower back pain','Knee weakness','Tinnitus','Dry eyes','Blurred vision','Hair loss','Poor appetite','Bloating','Constipation','Loose stools','Frequent urination','Scanty urine','Skin issues','Headache','Dizziness','Chest tightness','Sighing'];
+  const TONGUES=['Pale','Red','Crimson','Purple','Swollen','Thin','Cracked','Short','Deviated','Thin white coat','Thick white coat','Thin yellow coat','Thick yellow coat','Greasy coat','No coat/peeled'];
+  const PULSES=['Wiry','Slippery','Rapid','Slow','Thin/Thready','Full/Surging','Weak','Deep','Floating','Choppy','Tight','Hollow'];
+  document.getElementById('symptom-selector').innerHTML=SYMS.map(s=>`<span class="chip" onclick="this.classList.toggle('sel')">${s}</span>`).join('');
+  document.getElementById('tongue-chips').innerHTML=TONGUES.map(t=>`<span class="chip" onclick="this.classList.toggle('sel')">${t}</span>`).join('');
+  document.getElementById('pulse-chips').innerHTML=PULSES.map(p=>`<span class="chip" onclick="this.classList.toggle('sel')">${p}</span>`).join('');
+}
+function runPatternDx(){
+  var syms=Array.from(document.querySelectorAll('#symptom-selector .chip.sel')).map(c=>c.textContent);
+  var tongue=Array.from(document.querySelectorAll('#tongue-chips .chip.sel')).map(c=>c.textContent);
+  var pulse=Array.from(document.querySelectorAll('#pulse-chips .chip.sel')).map(c=>c.textContent);
+  var patterns=[];
+  if(syms.some(s=>['Irritability','Sighing','Chest tightness','Depression'].includes(s))&&pulse.includes('Wiry'))patterns.push({p:'LV Qi Stagnation',conf:'High',tx:'Soothe LV, move Qi · Xiao Yao San · LV-3, PC-6, GB-34'});
+  if(syms.some(s=>['Night sweats','Hot flashes','Dry eyes','Tinnitus'].includes(s))&&(tongue.includes('Red')||tongue.includes('No coat/peeled'))&&pulse.includes('Thin/Thready'))patterns.push({p:'KD Yin Deficiency',conf:'High',tx:'Nourish KD Yin · Liu Wei Di Huang Wan · KD-3, SP-6, KD-7'});
+  if(syms.some(s=>['Fatigue','Poor appetite','Bloating','Loose stools'].includes(s))&&tongue.includes('Pale')&&pulse.includes('Weak'))patterns.push({p:'SP Qi Deficiency',conf:'Medium',tx:'Tonify SP, dry Damp · Si Jun Zi Tang · ST-36, SP-3, CV-12'});
+  if(syms.some(s=>['Insomnia','Palpitations','Anxiety'].includes(s))&&(tongue.includes('Pale')||tongue.includes('Red'))&&pulse.includes('Thin/Thready'))patterns.push({p:'HT Blood/Yin Deficiency',conf:'Medium',tx:'Nourish HT Blood · Suan Zao Ren Tang · HT-7, SP-6, CV-14'});
+  if(syms.some(s=>['Lower back pain','Knee weakness','Cold limbs','Frequent urination'].includes(s))&&tongue.includes('Pale')&&pulse.includes('Deep'))patterns.push({p:'KD Yang Deficiency',conf:'Medium',tx:'Warm KD Yang · You Gui Wan · KD-3, BL-23, CV-4 with moxa'});
+  if(!patterns.length)patterns.push({p:'Pattern unclear from selections',conf:'Low',tx:'Need more signs. Consider consulting classical texts or your supervisor.'});
+  var el=document.getElementById('pattern-result');
+  el.style.display='block';
+  el.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Differential (study purposes only)</div>'+patterns.map(p=>`<div style="background:var(--bg3);border-radius:10px;padding:.75rem;margin-bottom:.5rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem"><div style="font-size:15px;font-weight:700;color:var(--tx)">${p.p}</div><span style="font-size:11px;font-weight:700;color:${p.conf==='High'?'var(--t2)':p.conf==='Medium'?'var(--g2)':'var(--tx3)'};background:var(--bg4);padding:2px 8px;border-radius:100px">${p.conf}</span></div><div style="font-size:13px;color:var(--tx2);line-height:1.6">${p.tx}</div></div>`).join('');
+}
+
+function saveFormulaRx(){
+  var pat=document.getElementById('frx-pattern').value;if(!pat){toast('Add pattern');return;}
+  var rxs=JSON.parse(localStorage.getItem('intake-frx')||'[]');
+  rxs.unshift({pattern:pat,base:document.getElementById('frx-base').value,mods:document.getElementById('frx-mods').value,dose:document.getElementById('frx-dose').value,duration:document.getElementById('frx-duration').value,safety:document.getElementById('frx-safety').value,date:new Date().toISOString().slice(0,10),ts:Date.now()});
+  localStorage.setItem('intake-frx',JSON.stringify(rxs.slice(0,100)));
+  ['frx-pattern','frx-mods','frx-dose','frx-duration','frx-safety'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('frx-base').value='';
+  renderFrxList();toast('Formula Rx saved 🌿');
+}
+function renderFrxList(){
+  var rxs=JSON.parse(localStorage.getItem('intake-frx')||'[]');var el=document.getElementById('frx-list');
+  if(!rxs.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--tx3);font-size:14px">None yet.</div>';return;}
+  el.innerHTML=rxs.map((r,i)=>`<div class="note-card"><div class="note-hdr" onclick="togNote('frx',${i})"><div><div style="font-size:14px;font-weight:700;color:var(--tx)">${r.pattern}</div><div style="font-size:11px;color:var(--tx3)">${r.date}${r.base?' · '+r.base.split('(')[0].trim():''}</div></div><span style="color:var(--tx3);font-size:14px">›</span></div><div class="note-body" id="frxb${i}">${r.base?`<div style="font-size:14px;font-weight:600;color:var(--tx2);margin-bottom:.35rem">${r.base}</div>`:''}${r.mods?`<div style="font-size:13px;color:var(--tx2);margin-bottom:.3rem"><b style="color:var(--t2)">Mods:</b> ${r.mods}</div>`:''}${r.dose?`<div style="font-size:13px;color:var(--tx2);margin-bottom:.3rem"><b style="color:var(--g2)">Dose:</b> ${r.dose}</div>`:''}${r.safety?`<div style="font-size:13px;color:var(--tx2)"><b style="color:var(--t2)">Safety:</b> ${r.safety}</div>`:''}</div></div>`).join('');
+}
+
+function renderAllNotes(){
+  var notes=JSON.parse(localStorage.getItem('intake-notes')||'[]');var el=document.getElementById('all-notes');
+  if(!notes.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--tx3);font-size:14px">No notes yet.</div>';return;}
+  el.innerHTML=notes.map((n,i)=>`<div class="note-card"><div class="note-hdr" onclick="togNote('all',${i})"><div><div style="font-size:14px;font-weight:700;color:var(--tx)">${n.session||n.type} · ${n.cc}</div><div style="font-size:11px;color:var(--tx3)">${n.date}${n.pattern?' · '+n.pattern.split(';')[0]:''}</div></div><span style="color:var(--tx3);font-size:14px">›</span></div><div class="note-body" id="allb${i}"><div class="soap-section"><div class="soap-lbl">S</div><div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-top:.25rem">${n.s||'—'}</div></div><div class="soap-section"><div class="soap-lbl">O · Tongue: ${n.tongue_body||'—'} / ${n.tongue_coat||'—'} · Pulse: ${n.pulse||'—'}</div><div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-top:.25rem">${n.o||'—'}</div></div><div class="soap-section"><div class="soap-lbl">A · ${n.pattern||'—'}</div><div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-top:.25rem">${n.tx_principle||'—'}</div></div><div class="soap-section"><div class="soap-lbl">P</div><div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-top:.25rem">${n.p||'—'}</div></div>${n.reflect?`<div style="font-size:13px;color:var(--v2);font-style:italic;margin-top:.5rem;line-height:1.6">"${n.reflect}"</div>`:''}</div></div>`).join('');
+}
+
+function togNote(ns,i){var el=document.getElementById(ns+'b'+i);el.classList.toggle('open');}
+
+function renderRef(){
+  const TONGUE_REF=[{t:'Pale',p:'Blood/Yang deficiency'},{t:'Red',p:'Heat (excess or deficiency)'},{t:'Crimson',p:'Severe Heat, deep pathogen'},{t:'Purple',p:'Blood stagnation'},{t:'Swollen',p:'Damp or Phlegm'},{t:'Thin white coat',p:'Normal or early exterior'},{t:'Thick yellow coat',p:'Interior Heat/Damp-Heat'},{t:'No coat',p:'Yin deficiency, stomach Yin damaged'},{t:'Greasy coat',p:'Dampness or Phlegm'}];
+  const PULSE_REF=[{t:'Wiry',p:'LV/GB pattern, pain, stress'},{t:'Slippery',p:'Phlegm, Damp, pregnancy'},{t:'Thin/Thready',p:'Blood/Yin deficiency'},{t:'Rapid (>90)',p:'Heat'},{t:'Slow (<60)',p:'Cold, Yang deficiency'},{t:'Deep',p:'Interior pattern, KD'},{t:'Weak',p:'Qi/Yang deficiency'},{t:'Full/Surging',p:'Excess Heat'},{t:'Choppy',p:'Blood deficiency, stagnation'}];
+  document.getElementById('tongue-ref').innerHTML=TONGUE_REF.map(r=>`<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--bd2);font-size:13px"><span style="color:var(--tx2);font-weight:600">${r.t}</span><span style="color:var(--tx3)">${r.p}</span></div>`).join('');
+  document.getElementById('pulse-ref').innerHTML=PULSE_REF.map(r=>`<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--bd2);font-size:13px"><span style="color:var(--tx2);font-weight:600">${r.t}</span><span style="color:var(--tx3)">${r.p}</span></div>`).join('');
+}
+
+initSOAP();initRx();initPatternDx();renderFrxList();renderRef();
+
+function saveWhy() {
+  var val = document.getElementById('why-text').value.trim();
+  if (!val) { toast('Write your why first'); return; }
+  localStorage.setItem('intake-why', val);
+  document.getElementById('why-display').textContent = val;
+  document.getElementById('why-saved').style.display = 'block';
+  document.getElementById('why-text').value = '';
+  toast('Saved 💡');
+}
+
+function initWhy() {
+  // Load saved why
+  var saved = localStorage.getItem('intake-why');
+  if (saved) {
+    document.getElementById('why-display').textContent = saved;
+    document.getElementById('why-saved').style.display = 'block';
+  }
+  // Try loading custom image from repo
+  var img = new Image();
+  img.onload = function() {
+    document.getElementById('why-img-wrap').innerHTML = '<img src="icon-why.png" style="width:100%;height:auto;border-radius:12px;display:block">';
+  };
+  img.src = 'icon-why.png';
+  // VUIM countdown
+  var grad = new Date('2030-05-15');
+  var now = new Date();
+  var diff = grad - now;
+  var days = Math.floor(diff / (1000*60*60*24));
+  var months = Math.floor(days/30);
+  var years = Math.floor(days/365);
+  document.getElementById('vuim-countdown').innerHTML = `
+    <div style="font-family:'DM Serif Display',serif;font-size:48px;color:var(--t2);line-height:1">${days.toLocaleString()}</div>
+    <div style="font-size:12px;color:var(--tx3);margin-top:.35rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700">days until DAcHM · May 2030</div>
+    <div style="font-size:13px;color:var(--tx2);margin-top:.5rem">${years} years · ${months} months · Every one counts.</div>`;
+}
+
+// Hook into sw
+var __whyOrigSw = sw;
+sw = function(id, btn) {
+  __whyOrigSw(id, btn);
+  if (id === 'why') initWhy();
+};
+
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/the-intake/sw.js').catch(e=>console.log(e)));
+</script>
+
+<!-- WHY -->
+<div class="sec" id="sec-why">
+  <div class="slbl">Remember why 💡</div>
+  <div style="font-size:14px;color:var(--tx3);margin-bottom:.85rem;line-height:1.6">For the moments when it gets hard. This is your anchor.</div>
+
+  <div class="card" style="text-align:center;padding:1.25rem 1rem">
+    <div class="neon-border" style="margin-bottom:1rem"><div class="neon-sign">in case you forgot...<br>walk in and see<br>what happens 😉</div></div>
+    <div style="border:2px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:.75rem;min-height:200px;display:flex;align-items:center;justify-content:center;background:var(--bg3)" id="why-img-wrap">
+      <div style="text-align:center;padding:2rem">
+        <div style="font-size:36px;margin-bottom:.5rem">📸</div>
+        <div style="font-size:13px;color:var(--tx3);line-height:1.6">Upload <b>icon-why.png</b> to your repo<br>and it will appear here</div>
+      </div>
+    </div>
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--t2);font-style:italic;line-height:1.4;margin:.75rem 0">"That version of you chose this path.<br>Honor him by finishing it."</div>
+    <div style="font-size:12px;color:var(--tx3);margin-top:.5rem">DAcHM · VUIM · Class of 2030</div>
+  </div>
+
+  <div class="slbl" style="margin-top:.5rem">Your why</div>
+  <div class="card">
+    <textarea class="inp" id="why-text" placeholder="Write it here. Why did you choose this path? What were you running from? What are you running toward? Who are you becoming?" style="min-height:180px;margin-bottom:.65rem;line-height:1.75"></textarea>
+    <button class="btn bt" onclick="saveWhy()">Save</button>
+  </div>
+  <div id="why-saved" style="display:none" class="card">
+    <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Your why</div>
+    <div style="font-size:15px;color:var(--tx);line-height:1.75;font-style:italic" id="why-display"></div>
+  </div>
+
+  <div class="slbl" style="margin-top:.5rem">VUIM countdown</div>
+  <div class="card" style="text-align:center" id="vuim-countdown"></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "The Intake",
+  "short_name": "The Intake",
+  "description": "Clinical Journal \u00b7 VUIM DAcHM",
+  "start_url": "/the-intake/",
+  "scope": "/the-intake/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#09090f",
+  "theme_color": "#0d9488",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
